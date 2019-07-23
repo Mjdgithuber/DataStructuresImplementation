@@ -3,6 +3,71 @@
 
 #include "vec.h"
 
+////////////////////////////ITERATOR/////////////////////////////////////////////////////
+
+template <class T>
+vec<T>::iterator::iterator(T* ptr)
+	: m_ptr(ptr) {}
+
+template <class T>
+const T& vec<T>::iterator::operator*() const {
+	return *m_ptr;
+}
+
+template <class T>
+T& vec<T>::iterator::operator*() {
+	return *m_ptr;
+}
+
+template <class T>
+typename vec<T>::iterator& vec<T>::iterator::operator--() {
+	--m_ptr;
+	return *this;
+}
+
+template <class T>
+typename vec<T>::iterator& vec<T>::iterator::operator++() {
+	++m_ptr;
+	return *this;
+}
+
+template <class T>
+typename vec<T>::iterator vec<T>::iterator::operator++(int) {
+	iterator itr(m_ptr);
+	++m_ptr;
+	return itr;
+}
+
+template <class T>
+typename vec<T>::iterator vec<T>::iterator::operator--(int) {
+	iterator itr(m_ptr);
+	--m_ptr;
+	return itr;
+}
+
+template <class T>
+bool vec<T>::iterator::operator==(const iterator& itr) const {
+	return m_ptr == itr.m_ptr;
+}
+
+template <class T>
+bool vec<T>::iterator::operator!=(const iterator& itr) const {
+	return m_ptr != itr.m_ptr;
+}
+
+
+////////////////////////////VECTOR///////////////////////////////////////////////////////
+
+template <class T>
+typename vec<T>::iterator vec<T>::begin() {
+	return iterator(m_data);
+}
+
+template <class T>
+typename vec<T>::iterator vec<T>::end() {
+	return iterator(nullptr);
+}
+
 template <class T>
 vec<T>::vec(int cap)
 	: m_size(0), m_cap(cap), m_data(nullptr) {
@@ -89,6 +154,11 @@ T& vec<T>::operator[] (int i) {
 }
 
 template <class T>
+size_t vec<T>::size() {
+	return m_size;
+}
+
+template <class T>
 void vec<T>::expand() {
 	std::cout << "Expanding from " << m_cap << " to " << m_cap * 2 << "\n";
 	m_cap *= 2; // expand the capacity
@@ -99,7 +169,7 @@ void vec<T>::expand() {
 	m_data = reinterpret_cast<T*>(::operator new(sizeof(T) * m_cap));
 
 	// copy the old contents into bigger array
-	for (int i = 0; i < m_size; i++)
+	for (unsigned int i = 0; i < m_size; i++)
 		m_data[i] = temp[i];
 
 	// free old data
@@ -130,7 +200,7 @@ template <class T>
 void vec<T>::free_data() {
 	// explicitly call destructors
 	T* loc = m_data;
-	for (int i = 0; i < m_size; i++) {
+	for (unsigned int i = 0; i < m_size; i++) {
 		loc->~T();
 		loc++;
 	}

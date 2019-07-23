@@ -4,7 +4,6 @@
 template <class T>
 class vec {
 private:
-	//typedef unsigned char uchar;
 	unsigned int m_size;
 	unsigned int m_cap;
 	T* m_data;
@@ -15,6 +14,26 @@ private:
 	void free_data();
 	void move_data(vec&& rhs);
 public:
+	class iterator {
+	private:
+		T* m_ptr;
+	public:
+		iterator(T* ptr);
+
+		/* operators */
+		const T& operator*() const;
+		T& operator*();
+
+		iterator& operator++();
+		iterator& operator--();
+		iterator operator++(int);
+		iterator operator--(int);
+
+		bool operator==(const iterator& itr) const;
+		bool operator!=(const iterator& itr) const;
+	};
+
+	/* Constructors, destructor, various operators */
 	vec(int cap = 1);
 	vec(const vec& rhs);
 	vec(vec&& rhs);
@@ -22,8 +41,14 @@ public:
 	vec& operator=(const vec& rhs);
 	~vec();
 
-	T& operator[](int i);
+	iterator begin();
+	iterator end();
 
+	/* getters */
+	T& operator[](int i);
+	size_t size();
+
+	/* pushing to the vector */
 	void push_back(const T& obj);
 	//emplace_back();
 
