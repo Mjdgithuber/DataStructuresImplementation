@@ -18,17 +18,35 @@ public:
 	private:
 		T* m_ptr;
 	public:
+		/* constructor */
 		iterator(T* ptr);
 
-		/* operators */
+		/* dereference operators */
 		const T& operator*() const;
 		T& operator*();
 
+		T& operator[](int);
+		const T& operator[](int) const;
+
+		/* increment operators */
 		iterator& operator++();
 		iterator& operator--();
 		iterator operator++(int);
 		iterator operator--(int);
+		iterator& operator+=(int);
+		iterator& operator-=(int);
 
+		iterator operator+(int);
+		iterator operator-(int);
+
+		/* difference operator */
+		int operator-(const iterator& itr);
+
+		/* bool operators */
+		bool operator<(const iterator& itr) const;
+		bool operator>(const iterator& itr) const;
+		bool operator<=(const iterator& itr) const;
+		bool operator>=(const iterator& itr) const;
 		bool operator==(const iterator& itr) const;
 		bool operator!=(const iterator& itr) const;
 	};

@@ -20,6 +20,16 @@ T& vec<T>::iterator::operator*() {
 }
 
 template <class T>
+T& vec<T>::iterator::operator[](int i) {
+	return *(m_ptr + i);
+}
+
+template <class T>
+const T& vec<T>::iterator::operator[](int i) const {
+	return *(m_ptr + i);
+}
+
+template <class T>
 typename vec<T>::iterator& vec<T>::iterator::operator--() {
 	--m_ptr;
 	return *this;
@@ -46,14 +56,49 @@ typename vec<T>::iterator vec<T>::iterator::operator--(int) {
 }
 
 template <class T>
-bool vec<T>::iterator::operator==(const iterator& itr) const {
-	return m_ptr == itr.m_ptr;
+typename vec<T>::iterator& vec<T>::iterator::operator+=(int i) {
+	m_ptr += i;
+	return *this;
 }
 
 template <class T>
-bool vec<T>::iterator::operator!=(const iterator& itr) const {
-	return m_ptr != itr.m_ptr;
+typename vec<T>::iterator& vec<T>::iterator::operator-=(int i) {
+	m_ptr -= i;
+	return *this;
 }
+
+template <class T>
+typename vec<T>::iterator vec<T>::iterator::operator+(int i) {
+	return iterator(m_ptr + i);
+}
+
+template <class T>
+typename vec<T>::iterator vec<T>::iterator::operator-(int i) {
+	return iterator(m_ptr - i);
+}
+
+template <class T>
+int vec<T>::iterator::operator-(const iterator& itr) {
+	return m_ptr - itr.m_ptr;
+}
+
+template <class T>
+bool vec<T>::iterator::operator<(const iterator& itr) const { return m_ptr < itr.m_ptr; }
+
+template <class T>
+bool vec<T>::iterator::operator>(const iterator& itr) const { return m_ptr > itr.m_ptr;  }
+
+template <class T>
+bool vec<T>::iterator::operator<=(const iterator& itr) const { return m_ptr <= itr.m_ptr;  }
+
+template <class T>
+bool vec<T>::iterator::operator>=(const iterator& itr) const { return m_ptr >= itr.m_ptr; }
+
+template <class T>
+bool vec<T>::iterator::operator==(const iterator& itr) const { return m_ptr == itr.m_ptr; }
+
+template <class T>
+bool vec<T>::iterator::operator!=(const iterator& itr) const { return m_ptr != itr.m_ptr; }
 
 
 ////////////////////////////VECTOR///////////////////////////////////////////////////////
