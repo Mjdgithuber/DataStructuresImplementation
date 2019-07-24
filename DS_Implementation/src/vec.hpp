@@ -116,7 +116,7 @@ typename vec<T>::iterator vec<T>::end() {
 template <class T>
 vec<T>::vec(int cap)
 	: m_size(0), m_cap(cap), m_data(nullptr) {
-	std::cout << "Constructor Called!\n";
+	std::cout << "Vec Constructor Called!\n";
 
 	// calls global new operator to allocate (not construct)
 	m_data = reinterpret_cast<T*>(::operator new(sizeof(T) * m_cap));
@@ -124,14 +124,14 @@ vec<T>::vec(int cap)
 
 template <class T>
 vec<T>::vec(vec&& rhs) {
-	std::cout << "Move Constructor Called!\n";
+	std::cout << "Vec Move Constructor Called!\n";
 
 	move_data(std::move(rhs));
 }
 
 template <class T>
 vec<T>& vec<T>::operator=(vec<T>&& rhs) {
-	std::cout << "Move Assignment Operator Called!\n";
+	std::cout << "Vec Move Assignment Operator Called!\n";
 
 	free_data();
 
@@ -154,8 +154,18 @@ void vec<T>::move_data(vec<T>&& rhs) {
 }
 
 template <class T>
+T* vec<T>::new_obj_loc() {
+	// expand capacity if needed
+	if (m_size >= m_cap)
+		expand();
+
+	// find the location and use placement new to construct
+	return (m_data + (m_size++));
+}
+
+template <class T>
 vec<T>& vec<T>::operator=(const vec<T>& rhs) {
-	std::cout << "Assignment Operator Called!\n";
+	std::cout << "Vec Assignment Operator Called!\n";
 
 	free_data();
 
@@ -182,13 +192,13 @@ void vec<T>::copy(const vec<T>& rhs) {
 
 template <class T>
 vec<T>::vec(const vec& rhs) {
-	std::cout << "Copy constructor called!\n";
+	std::cout << "Vec Copy constructor called!\n";
 	copy(rhs);
 }
 
 template <class T>
 vec<T>::~vec() {
-	std::cout << "Destructor Called!\n";
+	std::cout << "Vec Destructor Called!\n";
 
 	free_data();
 }
@@ -214,8 +224,10 @@ void vec<T>::expand() {
 	m_data = reinterpret_cast<T*>(::operator new(sizeof(T) * m_cap));
 
 	// copy the old contents into bigger array
-	for (unsigned int i = 0; i < m_size; i++)
-		m_data[i] = temp[i];
+	for (unsigned int i = 0; i < m_size; i++) {
+		new (m_data + i) T(std::move(temp[i]));
+		temp[i].~T(); // destruct old element
+	}
 
 	// free old data
 	::operator delete(temp);
@@ -223,13 +235,20 @@ void vec<T>::expand() {
 
 template <class T>
 void vec<T>::push_back(const T& obj) {
-	// expand capacity if needed
-	if (m_size >= m_cap)
-		expand();
+	new (new_obj_loc()) T(obj);
+}
 
-	// find the location and use placement new to construct
-	T* loc = m_data + (m_size++);
-	new (loc) T(obj);
+template <class T>
+void vec<T>::push_back(T&& obj) {
+	// construct using move constructor (if applicable)
+	new (new_obj_loc()) T(std::move(obj));
+}
+
+template<class T> // for the enclosing class template
+template<class... Ts> // for the member template
+void vec<T>::emplace_back(Ts&&... args) {
+	// construct new object using passed in args
+	new (new_obj_loc()) T(std::forward<Ts>(args)...);
 }
 
 template <class T>
@@ -254,6 +273,5 @@ void vec<T>::free_data() {
 	::operator delete(m_data);
 	m_data = nullptr;
 }
-
 
 #endif

@@ -13,6 +13,7 @@ private:
 	void copy(const vec& rhs);
 	void free_data();
 	void move_data(vec&& rhs);
+	T* new_obj_loc();
 public:
 	class iterator {
 	private:
@@ -68,7 +69,10 @@ public:
 
 	/* pushing to the vector */
 	void push_back(const T& obj);
-	//emplace_back();
+	void push_back(T&& obj);
+
+	template<class... Ts>
+	void emplace_back(Ts&&... args);
 
 	void clear();
 };
