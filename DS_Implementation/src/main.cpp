@@ -47,6 +47,14 @@ public:
 
 };
 
+void test_funct(int&& i) {
+	std::cout << "RValue reference: " << i << "\n";
+}
+
+void test_funct(int& i) {
+	std::cout << "LValue reference: " << i << "\n";
+}
+
 void test() {
 	vec<int> ages;
 
@@ -88,6 +96,7 @@ void test2() {
 
 int main() {
 	//test();
+	
 	test2();
 
 	

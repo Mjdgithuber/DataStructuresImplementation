@@ -65,7 +65,17 @@ public:
 
 	/* getters */
 	T& operator[](int i);
-	size_t size();
+
+	size_t size() const;
+	size_t max_size() const;
+	void resize(size_t size);
+	void resize(size_t n, const T& val);
+	size_t capacity() const;
+	bool empty() const;
+	void reserve(size_type n);
+	void shrink_to_fit();
+
+
 
 	/* pushing to the vector */
 	void push_back(const T& obj);
