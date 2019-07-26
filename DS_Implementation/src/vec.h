@@ -65,6 +65,7 @@ public:
 
 	/* getters */
 	T& operator[](int i);
+	const T& operator[](int i) const;
 
 	size_t size() const;
 	size_t max_size() const;
@@ -72,7 +73,7 @@ public:
 	void resize(size_t n, const T& val);
 	size_t capacity() const;
 	bool empty() const;
-	void reserve(size_type n);
+	void reserve(size_t n);
 	void shrink_to_fit();
 
 

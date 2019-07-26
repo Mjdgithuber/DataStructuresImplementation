@@ -209,9 +209,26 @@ T& vec<T>::operator[] (int i) {
 }
 
 template <class T>
-size_t vec<T>::size() {
+size_t vec<T>::size() const {
 	return m_size;
 }
+
+/* MAX SIZE */
+/* Resize */
+/* Resize 2 */
+
+template <class T>
+size_t vec<T>::capacity() const {
+	return m_cap;
+}
+
+template <class T>
+bool vec<T>::empty() const {
+	return m_size == 0;
+}
+
+/* reserve */
+/* shrink to fit */
 
 template <class T>
 void vec<T>::expand() {
